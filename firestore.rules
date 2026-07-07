@@ -1,0 +1,45 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 1. Global Safety Net (Default Deny)
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // 2. Student and Teacher Responses Collection
+    match /responses/{responseId} {
+      // Allows anyone to read responses to compute aggregate statistical charts (pie charts, correct rates) on client side.
+      allow read, list: if true;
+      
+      // Validate schema elements rigorously upon creation to prevent value poisoning or wallet exhaustion.
+      allow create: if request.resource.data.keys().hasAll(['questionId', 'userName', 'selectedChoice', 'isCorrect', 'timestamp'])
+                    && request.resource.data.keys().size() == 5
+                    && request.resource.data.questionId is int
+                    && request.resource.data.userName is string
+                    && request.resource.data.userName.size() <= 64
+                    && request.resource.data.selectedChoice is string
+                    && request.resource.data.selectedChoice.size() <= 5
+                    && request.resource.data.isCorrect is bool;
+                    
+      // Prevent updating or deleting response histories (Ensuring Immutable audits)
+      allow update, delete: if false;
+    }
+
+    // 3. Discussion/Comments Room Collection
+    match /comments/{commentId} {
+      // Anyone can load the comment/question board relative to FE master
+      allow read, list: if true;
+      
+      // Validate comment fields to protect text sizes and keys
+      allow create: if request.resource.data.keys().hasAll(['questionId', 'userName', 'text', 'timestamp'])
+                    && request.resource.data.keys().size() == 4
+                    && request.resource.data.questionId is int
+                    && request.resource.data.userName is string
+                    && request.resource.data.userName.size() <= 64
+                    && request.resource.data.text is string
+                    && request.resource.data.text.size() <= 1000;
+                    
+      allow update, delete: if false;
+    }
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "name": "FE基礎理論マスター (基本情報対策)",
+  "description": "基本情報技術者試験の第1章「基礎理論」を網羅した30問以上の演習と、リアルタイムの回答統計、教師用詳細解説・指導メモ機能を備えた学習対策Webアプリ",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

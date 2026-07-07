@@ -1,0 +1,39 @@
+{
+  "entities": {
+    "Response": {
+      "title": "Response",
+      "description": "Student answers for specific questions",
+      "type": "object",
+      "properties": {
+        "questionId": { "type": "integer" },
+        "userName": { "type": "string" },
+        "selectedChoice": { "type": "string" },
+        "isCorrect": { "type": "boolean" },
+        "timestamp": { "type": "string", "format": "date-time" }
+      },
+      "required": ["questionId", "userName", "selectedChoice", "isCorrect", "timestamp"]
+    },
+    "Comment": {
+      "title": "Comment",
+      "description": "Short feedback or comment left by students",
+      "type": "object",
+      "properties": {
+        "questionId": { "type": "integer" },
+        "userName": { "type": "string" },
+        "text": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" }
+      },
+      "required": ["questionId", "userName", "text", "timestamp"]
+    }
+  },
+  "firestore": {
+    "/responses/{responseId}": {
+      "schema": "Response",
+      "description": "Student responses collection"
+    },
+    "/comments/{commentId}": {
+      "schema": "Comment",
+      "description": "Student comments collection"
+    }
+  }
+}
